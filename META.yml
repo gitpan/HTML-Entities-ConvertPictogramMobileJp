@@ -18,4 +18,4 @@ requires:
   Encode::JP::Mobile: 0.24
   HTTP::MobileAgent: 0
   Params::Validate: 0
-version: 0.01
+version: 0.03
