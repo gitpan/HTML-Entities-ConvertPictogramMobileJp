@@ -1,9 +1,10 @@
 package HTML::Entities::ConvertPictogramMobileJp;
 use strict;
 use warnings;
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 use Encode;
 use Encode::JP::Mobile;
+use Encode::JP::Mobile::Character;
 use Params::Validate;
 use base 'Exporter';
 our @EXPORT = qw/convert_pictogram_entities/;
@@ -21,8 +22,11 @@ sub convert_pictogram_entities {
         if ($agent->is_softbank) {
             _convert_unicode('softbank', $2)
         } elsif ($agent->is_ezweb) {
-            join '', map { sprintf( '&#x%X;', unpack( 'U*', $_ ) ) } split //,
-              decode "x-sjis-kddi-cp932-raw", encode( "x-sjis-kddi-auto", chr( hex $2 ) );
+            join '', map { sprintf '<img localsrc="%d" />', $_ }
+              map { Encode::JP::Mobile::Character->from_unicode($_)->number }
+              map { unpack 'U*', $_ }
+              split //, decode "x-utf8-kddi",
+              encode( "x-utf8-kddi", chr( hex $2 ) );
         } elsif ($agent->is_docomo && $agent->is_foma) {
             _convert_unicode('docomo', $2)
         } elsif (($agent->is_docomo && !$agent->is_foma) || $agent->is_airh_phone) {
@@ -51,7 +55,7 @@ __END__
 
 =encoding utf8
 
-=for stopwords utf8 pictogram DoCoMo KDDI SJIS SoftBank Unicode KDDI-Auto
+=for stopwords utf8 pictogram DoCoMo KDDI SJIS SoftBank Unicode KDDI-Auto au
 
 =head1 NAME
 
@@ -74,6 +78,8 @@ HTML 中にふくまれる絵文字の Unicode 16進数値文字参照の DoCoMo
 
 DoCoMo Mova/AirHPhone の場合には、 Unicode 実体参照ではなく SJIS の実体参照に変換して出力
 することに注意してください。これは、該当機種が、 SJIS の実体参照でないと表示できないためです。
+
+au の一部端末(W41CA, W32H など) では Unicode 実体参照が表示できないため、<img localsrc="" /> 形式を採用しています。
 
 =head1 AUTHOR
 

@@ -3,6 +3,7 @@ abstract: convert pictogram entities
 author: Tokuhiro Matsuno <tokuhirom@gmail.com>
 build_requires: 
   Test::More: 0
+  YAML: 0
 distribution_type: module
 generated_by: Module::Install version 0.650
 license: perl
@@ -18,4 +19,4 @@ requires:
   Encode::JP::Mobile: 0.24
   HTTP::MobileAgent: 0
   Params::Validate: 0
-version: 0.03
+version: 0.04
