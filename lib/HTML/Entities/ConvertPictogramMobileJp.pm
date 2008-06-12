@@ -1,7 +1,7 @@
 package HTML::Entities::ConvertPictogramMobileJp;
 use strict;
 use warnings;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 use Encode;
 use Encode::JP::Mobile;
 use Params::Validate;
@@ -12,7 +12,18 @@ our @EXPORT = qw/convert_pictogram_entities/;
 
 sub convert_pictogram_entities {
     validate(@_ => +{
-        mobile_agent => +{ isa => 'HTTP::MobileAgent' },
+        mobile_agent => +{
+            callbacks => {
+                'HTTP::MobileAgent or HTTP::MobileAttribute' => sub {
+                    my $pkg = ref $_[0];
+                    $pkg && (
+                        $_[0]->isa('HTTP::MobileAgent') ||
+                        $_[0]->isa('HTTP::MobileAttribute') ||
+                        $pkg =~ /^HTTP::MobileAttribute::Agent::/
+                    )
+                },
+            },
+        },
         html  => 1,
     });
     my %args = @_;
