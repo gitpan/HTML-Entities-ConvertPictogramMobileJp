@@ -1,7 +1,7 @@
 package HTML::Entities::ConvertPictogramMobileJp;
 use strict;
 use warnings;
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 use Encode;
 use Encode::JP::Mobile;
 use Params::Validate;
@@ -9,6 +9,7 @@ use HTML::Entities::ConvertPictogramMobileJp::KDDITABLE;
 use File::ShareDir qw/dist_file/;
 use base 'Exporter';
 our @EXPORT = qw/convert_pictogram_entities/;
+use 5.008001;
 
 sub convert_pictogram_entities {
     validate(@_ => +{
